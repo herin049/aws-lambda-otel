@@ -43,13 +43,6 @@ package:
     echo "Deployment package created: {{dist_dir}}/{{zip_name}}"
     echo "Size: $(du -h {{dist_dir}}/{{zip_name}} | cut -f1)"
 
-# Deploy to AWS Lambda
-deploy function_name: package
-    @echo "Deploying to Lambda function: {{function_name}}"
-    aws lambda update-function-code \
-        --function-name {{function_name}} \
-        --zip-file fileb://{{dist_dir}}/{{zip_name}}
-
 # Initialize infrastructure
 init env="dev":
     @echo "Initializing infrastructure for environment: {{env}}"

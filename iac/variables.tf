@@ -47,25 +47,25 @@ variable "lambda_handler" {
 }
 
 variable "otel_collector_layer_path" {
-    description = "Path to the OpenTelemetry Collector Lambda layer zip file"
-    type        = string
-    default     = "../opentelemetry-lambda/collector/build/opentelemetry-collector-layer-amd64.zip"
+  description = "Path to the OpenTelemetry Collector Lambda layer zip file"
+  type        = string
+  default     = "../opentelemetry-lambda/collector/build/opentelemetry-collector-layer-amd64.zip"
 }
 
 variable "otel_python_layer_path" {
-    description = "Path to the OpenTelemetry Python Lambda layer zip file"
-    type        = string
-    default     = "../opentelemetry-lambda/python/src/build/opentelemetry-python-layer.zip"
+  description = "Path to the OpenTelemetry Python Lambda layer zip file"
+  type        = string
+  default     = "../opentelemetry-lambda/python/src/build/opentelemetry-python-layer.zip"
 }
 
 variable "otel_service_name" {
-    description = "Service name for OpenTelemetry instrumentation"
-    type        = string
-    default     = "aws-lambda-otel-service"
+  description = "Service name for OpenTelemetry instrumentation"
+  type        = string
+  default     = "aws-lambda-otel-service"
 }
 
 variable "otel_exporter_endpoint" {
-    description = "OpenTelemetry exporter endpoint"
-    type        = string
-    default     = ""
+  description = "OpenTelemetry exporter endpoint"
+  type        = string
+  default     = ""
 }
