@@ -64,8 +64,19 @@ variable "otel_service_name" {
   default     = "aws-lambda-otel-service"
 }
 
-variable "otel_exporter_endpoint" {
-  description = "OpenTelemetry exporter endpoint"
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
   type        = string
-  default     = ""
+  default     = "10.0.0.0/16"
+}
+
+variable "grafana_otlp_endpoint" {
+  description = "Grafana OTLP endpoint for exporting traces and metrics"
+  type        = string
+}
+
+variable "grafana_auth_token" {
+  description = "Grafana authentication token for OTLP exporter"
+  type        = string
+  sensitive   = true
 }

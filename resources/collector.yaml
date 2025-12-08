@@ -5,16 +5,28 @@ receivers:
         endpoint: "localhost:4317"
       http:
         endpoint: "localhost:4318"
+  telemetryapi:
+    types: ["platform"]
 
 exporters:
+  otlphttp/grafana:
+    endpoint: "${env:GRAFANA_OTLP_ENDPOINT}"
+    headers:
+      Authorization: "${env:GRAFANA_AUTH_TOKEN}"
   debug:
     verbosity: detailed
 
 service:
+  telemetry:
+    logs:
+      level: debug
   pipelines:
     traces:
-      receivers: [otlp]
-      exporters: [debug]
+      receivers: [otlp, telemetryapi]
+      exporters: [otlphttp/grafana]
     metrics:
       receivers: [otlp]
-      exporters: [debug]
+      exporters: [otlphttp/grafana]
+    logs:
+      receivers: [otlp, telemetryapi]
+      exporters: [otlphttp/grafana]

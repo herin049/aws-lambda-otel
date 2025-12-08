@@ -27,11 +27,13 @@ logger = logging.getLogger(__name__)
 @functools.cache
 def get_event_loop() -> AbstractEventLoop:
     loop: AbstractEventLoop = uvloop.new_event_loop()
+    logger.error("Creating event loop")
     asyncio.set_event_loop(loop)
     return asyncio.new_event_loop()
 
 
 async def handle_event(event: Any, context: LambdaContext) -> dict:
+    logger.error("Handling event: %s", event)
     return {"statusCode": 200, "body": "Hello, World!"}
 
 

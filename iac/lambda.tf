@@ -14,6 +14,11 @@ resource "aws_lambda_function" "this" {
     aws_lambda_layer_version.otel_python.arn,
   ]
 
+  vpc_config {
+    subnet_ids         = [aws_subnet.private.id]
+    security_group_ids = [aws_security_group.lambda.id]
+  }
+
   environment {
     variables = {
       ENVIRONMENT = var.environment
@@ -22,18 +27,21 @@ resource "aws_lambda_function" "this" {
       AWS_LAMBDA_EXEC_WRAPPER            = "/opt/otel-instrument"
       OTEL_SERVICE_NAME                  = "${var.otel_service_name}-${var.environment}"
       OTEL_TRACES_SAMPLER                = "always_on"
-      OTEL_PROPAGATORS                   = "tracecontext"
+      OTEL_PROPAGATORS                   = "tracecontext,baggage,b3"
       OTEL_EXPORTER_OTLP_ENDPOINT        = "http://localhost:4318"
       OTEL_EXPORTER_OTLP_PROTOCOL        = "http/protobuf"
       OTEL_TRACES_EXPORTER               = "otlp"
       OTEL_METRICS_EXPORTER              = "otlp"
-      OTEL_LOGS_EXPORTER                 = "none"
+      OTEL_LOGS_EXPORTER                 = "otlp"
       OPENTELEMETRY_COLLECTOR_CONFIG_URI = "/var/task/resources/collector.yaml"
+      GRAFANA_OTLP_ENDPOINT              = var.grafana_otlp_endpoint
+      GRAFANA_AUTH_TOKEN                 = var.grafana_auth_token
     }
   }
 
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
+    aws_iam_role_policy_attachment.lambda_vpc,
     aws_cloudwatch_log_group.lambda_log_group,
   ]
 }

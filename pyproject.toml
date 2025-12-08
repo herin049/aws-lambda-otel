@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "aiohttp>=3.13.2",
+    "opentelemetry-propagator-b3>=1.39.0",
     "uvloop>=0.22.1",
 ]
 

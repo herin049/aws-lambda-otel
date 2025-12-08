@@ -44,3 +44,4 @@ venv/
 *.pem
 *.key
 secrets.tfvars
+secrets.auto.tfvars
