@@ -24,18 +24,19 @@ resource "aws_lambda_function" "this" {
       ENVIRONMENT = var.environment
 
       # OpenTelemetry Configuration
-      AWS_LAMBDA_EXEC_WRAPPER            = "/opt/otel-instrument"
-      OTEL_SERVICE_NAME                  = "${var.otel_service_name}-${var.environment}"
-      OTEL_TRACES_SAMPLER                = "always_on"
-      OTEL_PROPAGATORS                   = "tracecontext,baggage,b3"
-      OTEL_EXPORTER_OTLP_ENDPOINT        = "http://localhost:4318"
-      OTEL_EXPORTER_OTLP_PROTOCOL        = "http/protobuf"
-      OTEL_TRACES_EXPORTER               = "otlp"
-      OTEL_METRICS_EXPORTER              = "otlp"
-      OTEL_LOGS_EXPORTER                 = "otlp"
-      OPENTELEMETRY_COLLECTOR_CONFIG_URI = "/var/task/resources/collector.yaml"
-      GRAFANA_OTLP_ENDPOINT              = var.grafana_otlp_endpoint
-      GRAFANA_AUTH_TOKEN                 = var.grafana_auth_token
+      AWS_LAMBDA_EXEC_WRAPPER                          = "/opt/otel-instrument"
+      OTEL_SERVICE_NAME                                = "${var.otel_service_name}-${var.environment}"
+      OTEL_TRACES_SAMPLER                              = "always_on"
+      OTEL_PROPAGATORS                                 = "tracecontext,baggage,b3"
+      OTEL_EXPORTER_OTLP_ENDPOINT                      = "http://localhost:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL                      = "http/protobuf"
+      OTEL_TRACES_EXPORTER                             = "otlp"
+      OTEL_METRICS_EXPORTER                            = "otlp"
+      OTEL_LOGS_EXPORTER                               = "otlp"
+      OPENTELEMETRY_COLLECTOR_CONFIG_URI               = "/var/task/resources/collector.yaml"
+      OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED = "true"
+      GRAFANA_OTLP_ENDPOINT                            = var.grafana_otlp_endpoint
+      GRAFANA_AUTH_TOKEN                               = var.grafana_auth_token
     }
   }
 

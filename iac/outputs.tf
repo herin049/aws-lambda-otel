@@ -35,12 +35,12 @@ output "private_subnet_id" {
 
 output "nat_gateway_id" {
   description = "ID of the NAT Gateway"
-  value       = aws_nat_gateway.main.id
+  value       = var.nat_method == "gateway" ? aws_nat_gateway.main["nat"].id : ""
 }
 
 output "nat_gateway_public_ip" {
   description = "Public IP of the NAT Gateway"
-  value       = aws_eip.nat.public_ip
+  value       = var.nat_method == "gateway" ? aws_eip.nat["nat"].id : ""
 }
 
 output "lambda_security_group_id" {

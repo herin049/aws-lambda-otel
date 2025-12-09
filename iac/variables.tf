@@ -70,6 +70,17 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "nat_method" {
+  type        = string
+  description = "NAT method for private subnets (either 'gateway' or 'instance')"
+  default     = "instance"
+
+  validation {
+    condition     = var.nat_method == "gateway" || var.nat_method == "instance"
+    error_message = "nat_method must be either 'gateway' or 'instance'."
+  }
+}
+
 variable "grafana_otlp_endpoint" {
   description = "Grafana OTLP endpoint for exporting traces and metrics"
   type        = string
