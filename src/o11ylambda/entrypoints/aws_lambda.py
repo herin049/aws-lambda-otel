@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import signal
 from types import FrameType
 from typing import TYPE_CHECKING, Protocol, Any
@@ -5,6 +7,11 @@ import functools
 import uvloop
 import asyncio
 from asyncio import AbstractEventLoop
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 import logging
 
 if TYPE_CHECKING:
@@ -21,6 +28,13 @@ if TYPE_CHECKING:
         def get_remaining_time_in_millis(self) -> int: ...
 
 
+resource = Resource.create({SERVICE_NAME: "test-service"})
+
+tracer_provider = TracerProvider(resource=resource)
+trace.set_tracer_provider(tracer_provider)
+tracer_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+
+tracer = trace.get_tracer(__name__)
 logger = logging.getLogger(__name__)
 
 
@@ -33,8 +47,15 @@ def get_event_loop() -> AbstractEventLoop:
 
 
 async def handle_event(event: Any, context: LambdaContext) -> dict:
-    logger.error("Handling event: %s", event)
-    return {"statusCode": 200, "body": "Hello, World!"}
+    with tracer.start_as_current_span(
+        "handle_event_span",
+        attributes={
+            "aws.request_id": context.aws_request_id,
+            "aws.function_name": context.function_name,
+        },
+    ):
+        logger.error("Handling event: %s", event)
+        return {"statusCode": 200, "body": "Hello, World!"}
 
 
 async def shutdown(loop: AbstractEventLoop, sig: signal.Signals) -> None:
